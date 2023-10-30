@@ -691,6 +691,36 @@ exports.addAura = (damageFactor = 1, sizeFactor = 1, opacity = 0.3, auraColor) =
     };
 }
 
+exports.addThanatosAura = (damageFactor = 1, sizeFactor = 1, opacity, auraColor) => {
+    let auraType = "thanaura"
+    let symbolType = "ThanatosauraSymbol"
+    auraColor = '#b657fa'
+    return {
+        PARENT: ["genericTank"],
+        INDEPENDENT: true,
+        LABEL: "",
+        COLOR: 17,
+        GUNS: [
+            {
+                POSITION: [0, 20, 1, 0, 0, 0, 0,],
+                PROPERTIES: {
+                    SHOOT_SETTINGS: exports.combineStats([g.aura, { size: sizeFactor, damage: damageFactor }]),
+                    TYPE: [auraType, {COLOR: auraColor, ALPHA: opacity}],
+                    MAX_CHILDREN: 1,
+                    AUTOFIRE: true,
+                    SYNCS_SKILLS: true,
+                }, 
+            }, 
+        ],
+        TURRETS: [
+            {
+                POSITION: [20 - 5, 0, 0, 0, 360, 1],
+                TYPE: [symbolType, {COLOR: auraColor, INDEPENDENT: true}],
+            },
+        ]
+    };
+}
+
 //unfinished lolo
 exports.makeLabyrinthShape = (type) => {
     let output = exports.dereference(type);

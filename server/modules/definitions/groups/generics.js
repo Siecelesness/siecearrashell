@@ -292,3 +292,91 @@ exports.auraSymbol = {
     COLOR: 0,
     SHAPE: [[-0.598,-0.7796],[-0.3817,-0.9053],[0.9688,-0.1275],[0.97,0.125],[-0.3732,0.9116],[-0.593,0.785]]
 };
+
+exports.ThanatosauraBase = {
+    TYPE: "aura",
+    ACCEPTS_SCORE: false,
+    FACING_TYPE: "smoothWithMotion",
+    MOTION_TYPE: "withMaster",
+    CONTROLLERS: [["spin", {speed: -0.04}]],
+    CAN_GO_OUTSIDE_ROOM: true,
+    HITS_OWN_TYPE: "never",
+    DAMAGE_EFFECTS: false,
+    DIE_AT_RANGE: false,
+    ALPHA: 0.3,
+    CLEAR_ON_MASTER_UPGRADE: true,
+    CAN_GO_OUTSIDE_ROOM: true,
+    BODY: {
+        SHIELD: 1e9,
+        REGEN: 1e6,
+        HEALTH: 1e9,
+        DENSITY: 0,
+        SPEED: 0,
+        PUSHABILITY: 0,
+    }
+};
+
+exports.thanauraouter = {
+    SHAPE: -3,
+    COLOR: '#b657fa'
+};
+exports.thanauraclock = {
+    COLOR: '#4032a8'
+};
+exports.thanaura = {
+    PARENT: ["ThanatosauraBase"],
+    LABEL: "Aura",
+    COLOR: 0,
+    BODY: {
+        DAMAGE: 0.25,
+    },
+    TURRETS: [
+        {
+            POSITION: [6, 15, 0, 0, 0, 0],
+            TYPE: "thanauraouter",
+        },
+        {
+            POSITION: [6, 15, 0, 120, 0, 0],
+            TYPE: "thanauraouter",
+        },
+        {
+            POSITION: [6, 15, 0, 240, 0, 0],
+            TYPE: "thanauraouter",
+        },
+     ],
+};
+
+for(let i = 0; i < 80; i++) {
+    exports.thanaura.TURRETS.push(
+        {
+            POSITION: [1.5, 6.2, 8, 360/80*(i+0.5), 180, 1],
+            TYPE: ['thanauraclock'],
+        },
+    )
+};
+for(let i = 0; i < 60; i++) {
+    exports.thanaura.TURRETS.push(
+        {
+            POSITION: [.5, 3.2, 8, 360/60*(i+0.5), 180, 1],
+            TYPE: ['thanauraclock'],
+        },
+    )
+};
+for(let i = 0; i < 12; i++) {
+    exports.thanaura.TURRETS.push(
+        {
+            POSITION: [.5, 2.7, 8, 360/12*(i+0.5), 180, 1],
+            TYPE: ['thanauraclock'],
+        },
+    )
+};
+
+//exports.thanaura.TURRETS.push(...Array(60).fill().map((_, i) => ({ POSITION: [1, 9.65, 1.2, 8, 0, i * 6, 0], })))
+
+exports.ThanatosauraSymbol = {
+    PARENT: ["genericTank"],
+    CONTROLLERS: [["spin", {speed: -0.04}]],
+    INDEPENDENT: true,
+    COLOR: '#b657fa',
+    SHAPE: 6
+};

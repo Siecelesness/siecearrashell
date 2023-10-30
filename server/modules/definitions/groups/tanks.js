@@ -129,6 +129,20 @@ exports.hypermissile = {
         },
     ],
 };
+exports.autoPounderTurret = {
+    PARENT: ["genericTank"],
+    LABEL: "Turret",
+    COLOR: 16,
+    GUNS: [
+        {
+            POSITION: [21, 14, 1, 0, 0, 0, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.basic, g.gunner, g.power, g.morerecoil, g.turret, g.pound, g.destroy]),
+                TYPE: "bullet",
+            },
+        },
+    ],
+};
 exports.minimissile = {
     PARENT: ["missile"],
     GUNS: [

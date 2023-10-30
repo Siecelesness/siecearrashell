@@ -1,4 +1,4 @@
-const { combineStats, skillSet, makeAuto, addAura } = require('../facilitators.js');
+const { combineStats, skillSet, makeAuto, addAura, addThanatosAura } = require('../facilitators.js');
 const { base, gunCalcNames } = require('../constants.js');
 const g = require('../gunvals.js');
 const { bullet } = require('./generics.js');
@@ -1009,7 +1009,7 @@ exports.exorcistor = {
 };
 exports.eliteSkimmer = {
     PARENT: ["elite"],
-    LABEL: "Elite Skimmer",
+    LABEL: "Artillery Silo",
     COLOR: 2,
     TURRETS: [
         {
@@ -4753,3 +4753,1568 @@ exports.trplnrBoss_vulnerableForm = {
         }
     }]
 }
+
+//
+
+exports.solSkimmerTurret = {
+    PARENT: ["genericTank"],
+    LABEL: "Bullet",
+    BODY: {
+        FOV: 10,
+    },
+    COLOR: 16,
+    CONTROLLERS: [
+        "canRepel",
+        "onlyAcceptInArc",
+        "mapAltToFire",
+        "nearestDifferentMaster",
+    ],
+    GUNS: [
+        {
+            /*** LENGTH  WIDTH   ASPECT    X       Y     ANGLE   DELAY */
+            POSITION: [19, 2, 1, 0, -2.5, 0, 0.25],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([
+                    g.basic,
+                    g.gunner,
+                    g.power,
+                    g.twin,
+                    g.nail,
+                    g.nail,
+                    g.pound,
+		    g.triple,
+                ]),
+                TYPE: "bullet",
+            },
+        },
+        {
+            POSITION: [19, 2, 1, 0, 2.5, 0, 0.75],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([
+                    g.basic,
+                    g.gunner,
+                    g.power,
+                    g.twin,
+                    g.nail,
+                    g.nail,
+                    g.pound,
+		    g.triple,
+                ]),
+                TYPE: "bullet",
+            },
+        },
+        {
+            POSITION: [20, 2, 1, 0, 0, 0, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([
+                    g.basic,
+                    g.gunner,
+                    g.power,
+                    g.twin,
+                    g.nail,
+                    g.nail,
+                    g.pound,
+		    g.triple,
+                ]),
+                TYPE: "bullet",
+            },
+        },
+        {
+            POSITION: [5.5, 7, -1.8, 6.5, 0, 0, 0],
+        },
+
+    ],
+};
+exports.carrierTurret = {
+    PARENT: ["genericTank"],
+    LABEL: "Carrier",
+    BODY: {
+        FOV: 2,
+    },
+    CONTROLLERS: [
+        "canRepel",
+        "onlyAcceptInArc",
+        "mapAltToFire",
+        "nearestDifferentMaster",
+    ],
+    COLOR: 16,
+    GUNS: [
+        {
+            /*** LENGTH  WIDTH   ASPECT    X       Y     ANGLE   DELAY */
+            POSITION: [18, 12, 1, 0, 0, 0, 1],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.drone, g.sunchip, g.carrier, g.halfreload]),
+                TYPE: ["sunDrone", {INDEPENDENT: true,}],
+                AUTOFIRE: true,
+                WAIT_TO_CYCLE: true,
+                SYNCS_SKILLS: true,
+            },
+        },
+    ],
+};
+exports.assemblerTurret = {
+    PARENT: ["genericTank"],
+    LABEL: 'Assembler',
+    BODY: {
+        FOV: 2,
+    },
+    CONTROLLERS: [
+        "canRepel",
+        "onlyAcceptInArc",
+        "mapAltToFire",
+        "nearestDifferentMaster",
+    ],
+    COLOR: 16,
+    GUNS: [
+        {
+            POSITION: [18, 12, 1, 0, 0, 0, 1],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.boomerang, g.twin, g.triple, g.carrier, g.carrier, g.halfreload,g.halfreload,g.halfreload,g.halfreload,g.halfreload]),
+                TYPE: "boomerang",
+		},
+        },
+	{
+            /*** LENGTH  WIDTH   ASPECT    X       Y     ANGLE   DELAY */
+            POSITION: [2, 12, 1.1, 18, 0, 0, 1],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.basic, g.twin, g.triple, g.halfreload]),
+                TYPE: "assemblerTrap",
+		MAX_CHILDREN: 8,
+            },
+        },
+    ],
+    TURRETS: [
+        {
+            /**        SIZE X   Y  ANGLE ARC */
+            POSITION: [2.5, 14, 0, 0,    360, 1],
+            TYPE: 'assemblerDot'
+        }
+    ]
+
+};
+exports.sunDrone = {
+    PARENT: ["drone"],
+    COLOR: '#ffd285',
+    DRAW_HEALTH: true,
+    SHAPE: 3,
+    INDEPENDENT: true,
+    BODY: {
+        PUSHABILITY: 0.3,
+        HEALTH: 0.3*5,
+        DAMAGE: 3.375/2,
+        SPEED: 1.4,
+        DENSITY: 0.1,
+        RESIST: 2,
+        FOV: 100,
+    },
+}
+exports.solBottomBody = {
+    LABEL: "",
+    CONTROLLERS: [["spin", { independent: true, speed: -0.01 }]],
+    COLOR: '#ffd285',
+    SIZE: 100,
+    SKILL: [9, 13, 9, 9, 9, 9, 11, 12, 6, 9],
+    SHAPE: 9,
+    FOV: 10,
+    TURRETS: [],
+};
+for(let i = 0; i < 9; i++) {
+    exports.solBottomBody.TURRETS.push(
+        {
+            POSITION: [6.5, 9, 0, 360/9*(i+0.5), 160, 0],
+            TYPE: ["solSkimmerTurret", { INDEPENDENT: true, }],
+        },
+    )
+};
+exports.solMiddleBody = {
+    LABEL: "",
+    CONTROLLERS: [["spin", { independent: true, speed: 0.005 }]],
+    COLOR: '#ffd285',
+    SIZE: 100,
+    SKILL: [9, 13, 9, 9, 9, 9, 10, 10, 6, 9],
+    SHAPE: 7,
+    FOV: 25,
+    MAX_CHILDREN: 30,
+    TURRETS: [],
+};
+for(let i = 0; i < 7; i++) {
+    exports.solMiddleBody.TURRETS.push(
+        {
+            POSITION: [8, 8.5, 0, 360/7*(i+0.5), 160, 0],
+            TYPE: ["carrierTurret", { INDEPENDENT: true, }],
+        },
+    )
+};
+exports.solTopBody = {
+    LABEL: "",
+    CONTROLLERS: [["spin", { independent: true, speed: -0.005 }]],
+    COLOR: '#ffd285',
+    SIZE: 100,
+    SKILL: [9, 13, 9, 9, 12, 10, 14, 13, 6, 9],
+    SHAPE: 5,
+    FOV: 10,
+    TURRETS: [],
+};
+for(let i = 0; i < 5; i++) {
+    exports.solTopBody.TURRETS.push(
+        {
+            POSITION: [9.5, 9, 0, 360/5*(i+0.5), 160, 0],
+            TYPE: ["assemblerTurret", { INDEPENDENT: true, }],
+        },
+    )
+};
+exports.solBasicGen = addAura();
+exports.sol = {
+    PARENT: ["eternal"],
+    NAME: "Sol",
+    COLOR: '#ffd285',
+    TURRETS: [
+	{
+		POSITION: [11, 0, 0, 0, 360, 1],
+		TYPE: 'atmosphereOfficialV2',
+	},
+	{
+		POSITION: [8, 0, 0, 0, 360, 1],
+		TYPE: 'atmosphereOfficialV2',
+	},
+	{
+		POSITION: [5, 0, 0, 0, 360, 1],
+		TYPE: 'atmosphereOfficialV2',
+	},
+        {
+            POSITION: [15.5, 0, 0, 0, 360, 1],
+            TYPE: ["solBottomBody"],
+        },
+        {
+            POSITION: [11, 0, 0, 0, 360, 1],
+            TYPE: ["solMiddleBody"],
+        },
+        {
+            POSITION: [6.5, 0, 0, 0, 360, 1],
+            TYPE: ["solTopBody"],
+        },
+    ],
+};
+for(let i = 0; i < 11; i++) {
+    exports.sol.TURRETS.push(
+        {
+            POSITION: [6, 9, 0, 360/11*(i+0.5), 180, 0],
+            TYPE: ["baseTrapTurret", { INDEPENDENT: true, }],
+        },
+    )
+};
+
+exports.bloodchip = {
+    PARENT: ["sunchip"],
+    SHAPE: 6
+};
+exports.apostal = {
+    PARENT: ["miniboss"],
+    LABEL: "Apostal",
+    DANGER: 8,
+    SHAPE: 6,
+    COLOR: 0,
+    SIZE: 26,
+    MAX_CHILDREN: 15,
+    FACING_TYPE: "autospin",
+    VALUE: 5e5,
+    BODY: {
+        FOV: 0.6,
+        SPEED: 0.07 * base.SPEED,
+        HEALTH: 17 * base.HEALTH,
+        DAMAGE: 5.5 * base.DAMAGE,
+    },
+    GUNS: Array(6).fill().map((_, i) => ({
+        POSITION: [3.5, 8.65, 1.2, 8, 0, i * 60, 0],
+        PROPERTIES: {
+            SHOOT_SETTINGS: combineStats([g.drone, g.summoner, g.destroy]),
+            TYPE: "bloodchip",
+            AUTOFIRE: true,
+            SYNCS_SKILLS: true,
+            STAT_CALCULATOR: gunCalcNames.necro,
+            WAIT_TO_CYCLE: true,
+        },
+    }))
+};
+
+exports.eliteProctrate = {
+    PARENT: ["elite"],
+    LABEL: "Artillery Hull",
+    COLOR: 2,
+    TURRETS: [
+        {
+            POSITION: [15, 5, 0, 60, 170, 0],
+            SHOOT_SETTINGS: combineStats([g.trap, g.halfrange, g.halfreload, g.halfrange, g.halfrange, g.halfreload]),
+            TYPE: "architectGun",
+        },
+        {
+            POSITION: [15, 5, 0, 180, 170, 0],
+            SHOOT_SETTINGS: combineStats([g.trap, g.halfrange, g.halfreload, g.halfrange, g.halfrange, g.halfreload]),
+            TYPE: "architectGun",
+        },
+        {
+            POSITION: [15, 5, 0, 300, 170, 0],
+            SHOOT_SETTINGS: combineStats([g.trap, g.halfrange, g.halfreload, g.halfrange, g.halfrange, g.halfreload]),
+            TYPE: "architectGun",
+        },
+    ],
+};
+
+exports.elitehealgen = addAura(-1, 1.5);
+exports.eliteheal = {
+    PARENT: ["elite"],
+    LABEL: "Artillery Medbay",
+    COLOR: 2,
+    TURRETS: [
+	{
+	    POSITION: [10, 0, 0, 0, 360, 1],
+	    TYPE: 'thermosphereAuraOfficialV2',
+	},
+        {
+            POSITION: [15, 5, 0, 60, 170, 0],
+            SHOOT_SETTINGS: combineStats([g.trap, g.mini, g.halfrange, g.halfreload, g.halfreload]),
+            TYPE: "barricade",
+        },
+        {
+            POSITION: [15, 5, 0, 180, 170, 0],
+            SHOOT_SETTINGS: combineStats([g.trap, g.halfrange, g.halfreload, g.halfreload]),
+            TYPE: "barricade",
+        },
+        {
+            POSITION: [15, 5, 0, 300, 170, 0],
+            SHOOT_SETTINGS: combineStats([g.trap, g.halfrange, g.halfreload, g.halfreload]),
+            TYPE: "barricade",
+        },
+    ],
+};
+
+exports.nemesistriangle = {
+    PARENT: ["smasherBody"],
+    SHAPE: 3
+};
+
+exports.nemesisold = {
+    PARENT: ["genericTank"],
+    SKILL: [15, 1, 1, 15, 15, 15, 15, 15, 15, 15],
+    LABEL: "Nemesis",
+    BODY: {
+        FOV: 1.25,
+        SPEED: 1.5 * base.SPEED,
+        HEALTH: 20 * base.HEALTH^5,
+        DAMAGE: 2.5 * base.DAMAGE,
+    },
+    HITS_OWN_TYPE: "hard",
+    HAS_NO_MASTER: true,
+    DRAW_HEALTH: true,
+    SHAPE: 0,
+    COLOR: '#f52e20',
+    SIZE: 20,
+    CONTROLLERS: ["nearestDifferentMaster", "mapTargetToGoal"],
+    LEVEL: 69,
+    AI: { NO_LEAD: true },
+    GUNS: [],
+    TURRETS: [
+	{
+            POSITION: [25, 0, 0, 0, 344, 0],
+            TYPE: "smasherBody",
+	},
+        {
+            POSITION: [25, 0, 0, 0, 93, 0],
+            TYPE: "smasherBody",
+        },
+        {
+            POSITION: [25, 0, 0, 0, 182, 0],
+            TYPE: "nemesistriangle",
+        },
+],
+};
+
+exports.bobtriangle = {
+    PARENT: ["smasherBody"],
+    SHAPE: 3
+};
+
+exports.bob = {
+    PARENT: ["elite"],
+    SKILL: [1, 1, 1, 1, 1, 1, 13, 10, 10, 10],
+    LABEL: "Bob",
+    BODY: {
+        FOV: 1.25,
+        SPEED: 1.2 * base.SPEED,
+        HEALTH: 2 * base.HEALTH,
+        DAMAGE: 2.5 * base.DAMAGE,
+    },
+    SHAPE: 0,
+    COLOR: 0,
+    SIZE: 20,
+    GUNS: [],
+    TURRETS: [
+	{
+            POSITION: [25, 0, 0, 0, 344, 0],
+            TYPE: "smasherBody",
+	},
+        {
+            POSITION: [25, 0, 0, 0, 182, 0],
+            TYPE: "bobtriangle",
+        },
+],
+};
+
+//Thanatos
+
+exports.thanatostriangle = {
+    PARENT: ["smasherBody"],
+    SHAPE: 3
+};
+
+exports.thanatosgen = addThanatosAura(3, 1.5);
+exports.thanatos = {
+    PARENT: ["genericTank"],
+    SKILL: [15, 1, 1, 15, 15, 15, 15, 15, 15, 15],
+    LABEL: "Thanatos",
+    BODY: {
+        FOV: 1.25,
+        SPEED: 1.5 * base.SPEED,
+        HEALTH: 25 * base.HEALTH^5,
+        DAMAGE: 2.5 * base.DAMAGE,
+    },
+    HITS_OWN_TYPE: "hard",
+    HAS_NO_MASTER: true,
+    DRAW_HEALTH: true,
+    SHAPE: 0,
+    COLOR: 16,
+    SIZE: 20,
+    CONTROLLERS: ["nearestDifferentMaster", "mapTargetToGoal"],
+    LEVEL: 200,
+    AI: { NO_LEAD: true },
+    GUNS: [],
+    TURRETS: [
+	{
+            POSITION: [25, 0, 0, 0, 344, 0],
+            TYPE: "smasherBody",
+	},
+        {
+            POSITION: [25, 0, 0, 0, 93, 0],
+            TYPE: "smasherBody",
+        },
+        {
+            POSITION: [25, 0, 0, 0, 182, 0],
+            TYPE: "thanatostriangle",
+        },
+	{
+	    POSITION: [10, 0, 0, 0, 0, 2],
+	    TYPE: 'thanatosgen',
+	},
+],
+};
+
+
+// Artemis
+
+exports.musketTurret = {
+    PARENT: ["genericTank"],
+    LABEL: "Musket",
+    BODY: {
+        FOV: 2,
+        SPEED: 1.4 * base.SPEED,
+    },
+    CONTROLLERS: [
+        "canRepel",
+        "onlyAcceptInArc",
+        "mapAltToFire",
+        "nearestDifferentMaster",
+    ],
+    COLOR: 16,
+    GUNS: [
+        {
+            /*** LENGTH  WIDTH   ASPECT    X       Y     ANGLE   DELAY */
+            POSITION: [16, 19, 1, 0, 0, 0, 0],
+        },
+        {
+            POSITION: [18, 7, 1, 0, 4, 0, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.basic, g.sniper, g.rifle, g.twin]),
+                TYPE: "bullet",
+            },
+        },
+        {
+            POSITION: [18, 7, 1, 0, -4, 0, 0.5],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.basic, g.sniper, g.rifle, g.twin]),
+                TYPE: "bullet",
+            },
+        },
+    ],
+};
+
+
+exports.crossbowTurret = {
+    PARENT: ["genericTank"],
+    LABEL: "Crossbow",
+    BODY: {
+        FOV: 2,
+        SPEED: 1.4 * base.SPEED,
+    },
+    CONTROLLERS: [
+        "canRepel",
+        "onlyAcceptInArc",
+        "mapAltToFire",
+        "nearestDifferentMaster",
+    ],
+    COLOR: 16,
+    GUNS: [
+        {
+            /*** LENGTH    WIDTH     ASPECT        X             Y         ANGLE     DELAY */
+            POSITION: [12.5, 2.5, 1, 0, 3.5, 35, 1],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([
+                    g.basic,
+                    g.sniper,
+                    g.rifle,
+                    g.slow,
+                    g.crossbow,
+                    g.halfrecoil,
+                ]),
+                TYPE: "bullet",
+            },
+        },
+        {
+            POSITION: [12.5, 2.5, 1, 0, -3.5, -35, 1],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([
+                    g.basic,
+                    g.sniper,
+                    g.rifle,
+                    g.slow,
+                    g.crossbow,
+                    g.halfrecoil,
+                ]),
+                TYPE: "bullet",
+            },
+        },
+        {
+            POSITION: [15, 2.5, 1, 0, 3.5, 35/2, 2/3],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([
+                    g.basic,
+                    g.sniper,
+                    g.rifle,
+                    g.slow,
+                    g.crossbow,
+                    g.halfrecoil,
+                ]),
+                TYPE: "bullet",
+            },
+        },
+        {
+            POSITION: [15, 2.5, 1, 0, -3.5, -35/2, 2/3],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([
+                    g.basic,
+                    g.sniper,
+                    g.rifle,
+                    g.slow,
+                    g.crossbow,
+                    g.halfrecoil,
+                ]),
+                TYPE: "bullet",
+            },
+        },
+        {
+            POSITION: [20, 3.5, 1, 0, 4, 0, 1/3],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([
+                    g.basic,
+                    g.sniper,
+                    g.rifle,
+                    g.slow,
+                    g.crossbow,
+                    g.halfrecoil,
+                ]),
+                TYPE: "bullet",
+            },
+        },
+        {
+            POSITION: [20, 3.5, 1, 0, -4, 0, 1/3],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([
+                    g.basic,
+                    g.sniper,
+                    g.rifle,
+                    g.slow,
+                    g.crossbow,
+                    g.halfrecoil,
+                ]),
+                TYPE: "bullet",
+            },
+        },
+        {
+            POSITION: [24, 7, 1, 0, 0, 0, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([
+                    g.basic,
+                    g.sniper,
+                    g.rifle,
+                    g.slow,
+                    g.halfreload,
+                    g.halfrecoil,
+                ]),
+                TYPE: "bullet",
+            },
+        },
+    ],
+};
+exports.artemisLowerBody = {
+    LABEL: "",
+    CONTROLLERS: [["spin", { independent: true, speed: -0.005 }]],
+    COLOR: '#42f56f',
+    SIZE: 100,
+    SKILL: [9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    MAX_CHILDREN: 28,
+    SHAPE: 7,
+    INDEPENDENT: true,
+    FACING_TYPE: "autospin",
+    TURRETS: [
+        {
+            //*********    SIZE         X             Y         ANGLE        ARC
+            POSITION: [8.5, 9, 0, 26, 180, 0],
+            TYPE: ["crossbowTurret"],
+        },
+        {
+            POSITION: [8.5, 9, 0, 77, 180, 0],
+            TYPE: ["crossbowTurret"],
+        },
+        {
+            POSITION: [8.5, 9, 0, 129, 180, 0],
+            TYPE: ["crossbowTurret"],
+        },
+        {
+            POSITION: [8.5, 9, 0, 180, 180, 0],
+            TYPE: ["crossbowTurret"],
+        },
+        {
+            POSITION: [8.5, 9, 0, 231, 180, 0],
+            TYPE: ["crossbowTurret"],
+        },
+        {
+            POSITION: [8.5, 9, 0, 282, 180, 0],
+            TYPE: ["crossbowTurret"],
+        },
+        {
+            POSITION: [8.5, 9, 0, 333, 180, 0],
+            TYPE: ["crossbowTurret"],
+        },
+    ],
+};
+exports.artemisUpperBody = {
+    LABEL: "",
+    CONTROLLERS: [["spin", { independent: true, speed: 0.005 }]],
+    COLOR: '#42f56f',
+    SIZE: 100,
+    SKILL: [9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    MAX_CHILDREN: 28,
+    SHAPE: 5,
+    INDEPENDENT: true,
+    TURRETS: [
+        {
+            //**     SIZE         X             Y         ANGLE        ARC
+            POSITION: [10.6, 7.5, 0, 35, 160, 0],
+            TYPE: ["musketTurret"],
+        },
+        {
+            POSITION: [10.6, 7.5, 0, 110, 160, 0],
+            TYPE: ["musketTurret"],
+        },
+        {
+            POSITION: [10.6, 7.5, 0, 180, 160, 0],
+            TYPE: ["musketTurret"],
+        },
+        {
+            POSITION: [10.6, 7.5, 0, 252, 160, 0],
+            TYPE: ["musketTurret"],
+        },
+        {
+            POSITION: [10.6, 7.5, 0, 325, 160, 0],
+            TYPE: ["musketTurret"],
+        },
+    ],
+};
+exports.artemis = {
+    PARENT: ["celestial"],
+    NAME: "Artemis",
+    COLOR: '#42f56f',
+    TURRETS: [
+        {
+            /*********    SIZE         X             Y         ANGLE        ARC */
+            POSITION: [6.5, 9, 0, 260, 180, 0],
+            TYPE: ["baseTrapTurret", { INDEPENDENT: true }],
+        },
+        {
+            POSITION: [6.5, 9, 0, 219, 180, 0],
+            TYPE: ["baseTrapTurret", { INDEPENDENT: true }],
+        },
+        {
+            POSITION: [6.5, 9, 0, 180, 180, 0],
+            TYPE: ["baseTrapTurret", { INDEPENDENT: true }],
+        },
+        {
+            POSITION: [6.5, 9, 0, 300, 180, 0],
+            TYPE: ["baseTrapTurret", { INDEPENDENT: true }],
+        },
+        {
+            POSITION: [6.5, 9, 0, 339, 180, 0],
+            TYPE: ["baseTrapTurret", { INDEPENDENT: true }],
+        },
+        {
+            POSITION: [6.5, 9, 0, 380, 180, 0],
+            TYPE: ["baseTrapTurret", { INDEPENDENT: true }],
+        },
+        {
+            POSITION: [6.5, 9, 0, 420, 180, 0],
+            TYPE: ["baseTrapTurret", { INDEPENDENT: true }],
+        },
+        {
+            POSITION: [6.5, 9, 0, 459, 180, 0],
+            TYPE: ["baseTrapTurret", { INDEPENDENT: true }],
+        },
+        {
+            POSITION: [6.5, 9, 0, 500, 180, 0],
+            TYPE: ["baseTrapTurret", { INDEPENDENT: true }],
+        },
+        {
+            POSITION: [14.77, 0, 0, 0, 360, 1],
+            TYPE: ["artemisLowerBody"],
+        },
+        {
+            POSITION: [8.7, 0, 0, 0, 360, 1],
+            TYPE: ["artemisUpperBody"],
+        },
+    ],
+};
+
+// Asterius
+
+exports.rangerTurret = {
+    PARENT: ["genericTank"],
+    LABEL: "Ranger",
+    BODY: {
+        SPEED: 0.8 * base.SPEED,
+        FOV: 2 * base.FOV,
+    },
+    CONTROLLERS: [
+        "canRepel",
+        "onlyAcceptInArc",
+        "mapAltToFire",
+        "nearestDifferentMaster",
+    ],
+    COLOR: 16,
+    GUNS: [
+        {
+            /*** LENGTH  WIDTH   ASPECT    X       Y     ANGLE   DELAY */
+            POSITION: [32, 8, 1, 0, 0, 0, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.basic, g.sniper, g.assass]),
+                TYPE: "bullet",
+            },
+        },
+        {
+            POSITION: [5, 8, -1.4, 8, 0, 0, 0],
+        },
+    ],
+};
+exports.sniperTurret = {
+    PARENT: ["genericTank"],
+    LABEL: "Sniper",
+    BODY: {
+        FOV: 2 * base.FOV,
+    },
+    CONTROLLERS: [
+        "canRepel",
+        "onlyAcceptInArc",
+        "mapAltToFire",
+        "nearestDifferentMaster",
+    ],
+    COLOR: 16,
+    GUNS: [
+        {
+            POSITION: [24, 8.5, 1, 0, 0, 0, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.basic, g.sniper]),
+                TYPE: "bullet",
+            },
+        },
+    ],
+};
+exports.asteriusLowerBody = {
+    LABEL: "",
+    CONTROLLERS: [["spin", { independent: true, speed: -0.005 }]],
+    COLOR: '#42f56f',
+    SIZE: 100,
+    SKILL: [9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    SHAPE: 5,
+    INDEPENDENT: true,
+    BODY: {
+        FOV: 10,
+        SPEED: 1.6 * base.SPEED,
+    },
+    MAX_CHILDREN: 18,
+    FACING_TYPE: "autospin",
+    TURRETS: [],
+};
+for(let i = 0; i < 5; i++) {
+    exports.asteriusLowerBody.TURRETS.push(
+        {
+            POSITION: [9, 8, 0, 360/5*(i+0.5), 160, 0],
+            TYPE: ["rangerTurret", { INDEPENDENT: true, }],
+        },
+    )
+};
+exports.asteriusUpperBody = {
+    LABEL: "",
+    CONTROLLERS: [["spin", { independent: true, speed: 0.005 }]],
+    AUTOSPIN: true,
+    COLOR: '#42f56f',
+    SIZE: 100,
+    SKILL: [9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    MAX_CHILDREN: 28,
+    SHAPE: 3,
+    INDEPENDENT: true,
+    TURRETS: [],
+};
+for(let i = 0; i < 3; i++) {
+    exports.asteriusUpperBody.TURRETS.push(
+        {
+            POSITION: [9.5, 7.5, 0, 360/3*(i+0.5), 160, 0],
+            TYPE: ["sniperTurret", { INDEPENDENT: true, }],
+        },
+    )
+};
+exports.asterius = {
+    PARENT: ["terrestrial"],
+    NAME: "Asterius",
+    COLOR: '#42f56f',
+    TURRETS: [
+        {
+            POSITION: [14.5, 0, 0, 0, 360, 1],
+            TYPE: ["asteriusLowerBody"],
+        },
+        {
+            POSITION: [8.5, 0, 0, 0, 360, 1],
+            TYPE: ["asteriusUpperBody"],
+        },
+    ],
+};
+for(let i = 0; i < 7; i++) {
+    exports.asterius.TURRETS.push(
+        {
+            POSITION: [7, 9, 0, 360/7*(i+0.5), 180, 0],
+            TYPE: ["terrestrialTrapTurret", { INDEPENDENT: true, }],
+        },
+    )
+};
+
+// Nest Reactor
+
+exports.nestreactortrap = {
+    PARENT: ["genericTank"],
+    LABEL: "nest trapper",
+    GUNS: [
+        {
+            POSITION: [15, 7, 1, 0, 0, 0, 0],
+        },
+        {
+            POSITION: [3, 7, 1.7, 15, 0, 0, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.trap]),
+                AUTOFIRE: true,
+                TYPE: "trap",
+                STAT_CALCULATOR: gunCalcNames.trap,
+		
+            },
+        },
+    ],
+};
+
+exports.nestreactorgen = addAura(1, 1);
+exports.nestReactor = {
+    PARENT: ["miniboss"],
+    LABEL: "Nest Reactor",
+    COLOR: 14,
+    SHAPE: 5,
+    SIZE: 50,
+    BODY: {
+        FOV: 1.3,
+        SPEED: base.SPEED * 0.25,
+        HEALTH: base.HEALTH * 9,
+        SHIELD: base.SHIELD * 1.5,
+        REGEN: base.REGEN,
+        DAMAGE: base.DAMAGE * 2.5,
+    },
+    GUNS: [
+        {
+            POSITION: [3.5, 6.65, 1.2, 8, 0, 35, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.drone, g.nest_keeper]),
+                TYPE: "snake",
+                AUTOFIRE: true,
+                LABEL: "Mega Crasher",
+            },
+        },
+        {
+            POSITION: [3.5, 6.65, 1.2, 8, 0, -35, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.drone, g.nest_keeper]),
+                TYPE: "snake",
+                AUTOFIRE: true,
+                LABEL: "Mega Crasher",
+            },
+        },
+        {
+            POSITION: [3.5, 6.65, 1.2, 8, 0, 180, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.drone, g.nest_keeper]),
+                TYPE: "snake",
+                AUTOFIRE: true,
+                LABEL: "Mega Crasher",
+            },
+        },
+        {
+            POSITION: [3.5, 6.65, 1.2, 8, 0, 108, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.drone, g.nest_keeper]),
+                TYPE: "snake",
+                AUTOFIRE: true,
+                LABEL: "Mega Crasher",
+            },
+        },
+        {
+            POSITION: [3.5, 6.65, 1.2, 8, 0, -108, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.drone, g.nest_keeper]),
+                TYPE: "snake",
+                AUTOFIRE: true,
+                LABEL: "Mega Crasher",
+            },
+        },
+    ],
+    TURRETS: [
+	{
+	    POSITION: [10, 0, 0, 0, 0, 0],
+	    TYPE: 'atmosphereOfficialV2',
+	},
+        {
+            POSITION: [8, 9, 0, 72, 120, 0],
+            TYPE: [
+                "nestreactortrap",
+                {
+                    INDEPENDENT: true,
+                    COLOR: 14,
+                },
+            ],
+        },
+        {
+            POSITION: [8, 9, 0, 0, 120, 0],
+            TYPE: [
+                "nestreactortrap",
+                {
+                    INDEPENDENT: true,
+                    COLOR: 14,
+                },
+            ],
+        },
+        {
+            POSITION: [8, 9, 0, 144, 120, 0],
+            TYPE: [
+                "nestreactortrap",
+                {
+                    INDEPENDENT: true,
+                    COLOR: 14,
+                },
+            ],
+        },
+        {
+            POSITION: [8, 9, 0, 216, 120, 0],
+            TYPE: [
+                "nestreactortrap",
+                {
+                    INDEPENDENT: true,
+                    COLOR: 14,
+                },
+            ],
+        },
+        {
+            POSITION: [8, 9, 0, -72, 120, 0],
+            TYPE: [
+                "nestreactortrap",
+                {
+                    INDEPENDENT: true,
+                    COLOR: 14,
+                },
+            ],
+        },
+        {
+            POSITION: [9, 0, 0, 0, 360, 1],
+            TYPE:[ "triTrapGuardTurret",
+		{
+		COLOR: 14,
+		},
+	],
+        },
+    ],
+};
+
+
+
+// dev bosses
+
+exports.squaregunshoot = {
+    PARENT: ["bullet"],
+    SHAPE: 3
+};
+
+exports.squareshotgun = {
+    PARENT: ["genericTank"],
+    DANGER: 7,
+    LABEL: "Shotgun",
+    GUNS: [
+	{
+            POSITION: [15, 14, 1, 6, 0, 0, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.basic, g.mach, g.shotgun, { size: 0.6 }]),
+                TYPE: "squaregunshoot",
+	},
+	},
+	{
+	POSITION: [8, 14, -1.3, 4, 0, 0, 0],
+	},
+    ],
+};
+
+
+exports.squaregunmangen = addAura(.9, .1);
+exports.squaregunman = {
+    PARENT: ["elite"],
+    SKILL: [5, 9, 4, 12, 3, 9, 9, 9, 7, 3],
+    LABEL: "Square Gun Man",
+    INDEPENDENT: true,
+    SHAPE: 4,
+    COLOR: '#c854fc',
+    SIZE: 20,
+    GUNS: [],
+    TURRETS: [
+	{
+	    POSITION: [10, 5, 0, 0, 0, 0],
+	    TYPE: 'atmosphereOfficialV2',
+	},
+        {
+            POSITION: [15, 5, 0, 0, 170, 0],
+            SHOOT_SETTINGS: combineStats([g.drone, g.summoner, { size: 0.7 }]),
+            TYPE: "squareshotgun",
+        },
+	{
+	    POSITION: [10, 5, 0, 90, 0, 0],
+	    TYPE: 'atmosphereOfficialV2',
+	},
+        {
+            POSITION: [15, 5, 0, 90, 170, 0],
+            SHOOT_SETTINGS: combineStats([g.drone, g.summoner, { size: 0.7 }]),
+            TYPE: "squareshotgun",
+        },
+	{
+	    POSITION: [10, 5, 0, 180, 0, 0],
+	    TYPE: 'atmosphereOfficialV2',
+	},
+        {
+            POSITION: [15, 5, 0, 180, 170, 0],
+            SHOOT_SETTINGS: combineStats([g.drone, g.summoner, { size: 0.7 }]),
+            TYPE: "squareshotgun",
+        },
+	{
+	    POSITION: [10, 5, 0, 270, 0, 0],
+	    TYPE: 'atmosphereOfficialV2',
+	},
+        {
+            POSITION: [15, 5, 0, 270, 170, 0],
+            SHOOT_SETTINGS: combineStats([g.drone, g.summoner, { size: 0.7 }]),
+            TYPE: "squareshotgun",
+        },
+    ],
+};
+
+// Amalgamboss
+
+exports.profLowerBody = {
+    LABEL: "",
+    CONTROLLERS: [["spin", { independent: true, speed: -0.005 }]],
+    COLOR: 36,
+    SIZE: 100,
+    SKILL: [9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    MAX_CHILDREN: 28,
+    SHAPE: 7,
+    INDEPENDENT: true,
+    FACING_TYPE: "autospin",
+    TURRETS: [
+        {
+            //*********    SIZE         X             Y         ANGLE        ARC
+            POSITION: [8.5, 9, 0, 26, 180, 0],
+            TYPE: ["sorcerer"],
+        },
+        {
+            POSITION: [8.5, 9, 0, 77, 180, 0],
+            TYPE: ["summoner"],
+        },
+        {
+            POSITION: [8.5, 9, 0, 129, 180, 0],
+            TYPE: ["enchantress"],
+        },
+        {
+            POSITION: [8.5, 9, 0, 180, 180, 0],
+            TYPE: ["exorcistor"],
+        },
+        {
+            POSITION: [8.5, 9, 0, 231, 180, 0],
+            TYPE: ["apostal"],
+        },
+        {
+            POSITION: [8.5, 9, 0, 282, 180, 0],
+            TYPE: ["roguePalisade"],
+        },
+        {
+            POSITION: [8.5, 9, 0, 333, 180, 0],
+            TYPE: ["eliteSkimmer"],
+        },
+        {
+            POSITION: [8.5, 24, 0, 333, 180, 0],
+            TYPE: ["nestReactor"],
+        },
+        {
+            //*********    SIZE         X             Y         ANGLE        ARC
+            POSITION: [8.5, 24, 0, 180, 180, 0],
+            TYPE: ["eliteheal"],
+        },
+        {
+            POSITION: [8.5, 24, 0, 282, 180, 0],
+            TYPE: ["nemesisold"],
+        },
+        {
+            POSITION: [8.5, 24, 0, 231, 180, 0],
+            TYPE: ["squaregunman"],
+        },
+        {
+            POSITION: [8.5, 24, 0, 77, 180, 0],
+            TYPE: ["eliteProctrate"],
+        },
+        {
+            POSITION: [8.5, 24, 0, 129, 180, 0],
+            TYPE: ["bob"],
+        },
+        {
+            //*********    SIZE         X             Y         ANGLE        ARC
+            POSITION: [8.5, 24, 0, 26, 180, 0],
+            TYPE: ["thanatos"],
+        },
+    ],
+};
+exports.profUpperBody = {
+    LABEL: "",
+    CONTROLLERS: [["spin", { independent: true, speed: 0.005 }]],
+    COLOR: 36,
+    SIZE: 100,
+    SKILL: [9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    MAX_CHILDREN: 120,
+    SHAPE: 5,
+    INDEPENDENT: true,
+    TURRETS: [
+        {
+            //**     SIZE         X             Y         ANGLE        ARC
+            POSITION: [10.6, 7.5, 0, 35, 160, 0],
+            TYPE: ["eliteDestroyer"],
+        },
+        {
+            POSITION: [10.6, 7.5, 0, 110, 160, 0],
+            TYPE: ["eliteGunner"],
+        },
+        {
+            POSITION: [10.6, 7.5, 0, 180, 160, 0],
+            TYPE: ["eliteSprayer"],
+        },
+        {
+            POSITION: [10.6, 7.5, 0, 252, 160, 0],
+            TYPE: ["eliteBattleship"],
+        },
+        {
+            POSITION: [10.6, 7.5, 0, 325, 160, 0],
+            TYPE: ["eliteSpawner"],
+        },
+    ],
+};
+exports.prof = {
+    PARENT: ["celestial"],
+    NAME: "ERR://23¤Y%/",
+    TOOLTIP: "You're doomed.",
+    COLOR: 36,
+    TURRETS: [
+        {
+            /*********    SIZE         X             Y         ANGLE        ARC */
+            POSITION: [6.5, 9, 0, 260, 180, 0],
+            TYPE: ["paladin", { INDEPENDENT: true }],
+        },
+        {
+            POSITION: [6.5, 9, 0, 219, 180, 0],
+            TYPE: ["freyja", { INDEPENDENT: true }],
+        },
+        {
+            POSITION: [6.5, 9, 0, 180, 180, 0],
+            TYPE: ["zaphkiel", { INDEPENDENT: true }],
+        },
+        {
+            POSITION: [6.5, 9, 0, 300, 180, 0],
+            TYPE: ["nyx", { INDEPENDENT: true }],
+        },
+        {
+            POSITION: [6.5, 9, 0, 339, 180, 0],
+            TYPE: ["theia", { INDEPENDENT: true }],
+        },
+        {
+            POSITION: [6.5, 9, 0, 380, 180, 0],
+            TYPE: ["artemis", { INDEPENDENT: true }],
+        },
+        {
+            POSITION: [6.5, 9, 0, 420, 180, 0],
+            TYPE: ["tyr", { INDEPENDENT: true }],
+        },
+        {
+            POSITION: [6.5, 9, 0, 459, 180, 0],
+            TYPE: ["alviss", { INDEPENDENT: true }],
+        },
+        {
+            POSITION: [6.5, 9, 0, 500, 180, 0],
+            TYPE: ["fiolnir", { INDEPENDENT: true }],
+        },
+        {
+            POSITION: [14.77, 0, 0, 0, 360, 1],
+            TYPE: ["profLowerBody"],
+        },
+        {
+            POSITION: [8.7, 0, 0, 0, 360, 1],
+            TYPE: ["profUpperBody"],
+        },
+    ],
+    BROADCAST_MESSAGE: "Nameless Deity has been usurped. Reality is safe for a short time.",
+};
+
+//ect
+
+exports.ordnanceattack = {
+    PARENT: ["genericTank"],
+    LABEL: "Ordnance",
+    DANGER: 7,
+    BODY: {
+        SPEED: base.SPEED * 0.9,
+        FOV: base.FOV * 1.25,
+    },
+    CONTROLLERS: ["zoom"],
+    TOOLTIP: "Hold right click to zoom.",
+    GUNS: [
+        {
+            /*** LENGTH  WIDTH   ASPECT    X       Y     ANGLE   DELAY */
+            POSITION: [17, 3, 1, 0, -5.75, -6, 0.25],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.basic, g.gunner, g.arty]),
+                TYPE: "bullet",
+                LABEL: "Secondary",
+            },
+        },
+        {
+            POSITION: [17, 3, 1, 0, 5.75, 6, 0.75],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.basic, g.gunner, g.arty]),
+                TYPE: "bullet",
+                LABEL: "Secondary",
+            },
+        },
+        {
+            POSITION: [24, 8, 1, 0, 0, 0, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.basic, g.sniper, g.hunter, g.hunter2]),
+                TYPE: "bullet",
+            },
+        },
+        {
+            POSITION: [21, 11, 1, 0, 0, 0, 0.25],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.basic, g.sniper, g.hunter]),
+                TYPE: "bullet",
+            },
+        },
+    ],
+};
+
+
+exports.elitecommander = {
+    PARENT: ["elite"],
+    LABEL: "Artillery Commander",
+    COLOR: 2,
+    TURRETS: [
+        {
+            POSITION: [15, 5, 0, 60, 170, 0],
+            SHOOT_SETTINGS: combineStats([g.trap, g.mini, g.halfrange, g.halfreload, g.halfreload]),
+            TYPE: "ordnanceattack",
+        },
+        {
+            POSITION: [15, 5, 0, 180, 170, 0],
+            SHOOT_SETTINGS: combineStats([g.trap, g.halfrange, g.halfreload, g.halfreload]),
+            TYPE: "ordnanceattack",
+        },
+        {
+            POSITION: [15, 5, 0, 300, 170, 0],
+            SHOOT_SETTINGS: combineStats([g.trap, g.halfrange, g.halfreload, g.halfreload]),
+            TYPE: "ordnanceattack",
+        },
+    ],
+};
+
+// Rhea
+
+exports.rheaLowerBody = {
+    LABEL: "",
+    CONTROLLERS: [["spin", { independent: true, speed: -0.005 }]],
+    COLOR: 17,
+    BODY: {
+        FOV: base.FOV * 2,
+	},
+    SIZE: 100,
+    SKILL: [9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    MAX_CHILDREN: 28,
+    SHAPE: 7,
+    INDEPENDENT: true,
+    FACING_TYPE: "autospin",
+    TURRETS: [
+        {
+            //*********    SIZE         X             Y         ANGLE        ARC
+            POSITION: [8.5, 9, 0, 26, 180, 0],
+            TYPE: ["wrench"],
+        },
+        {
+            POSITION: [8.5, 9, 0, 77, 180, 0],
+            TYPE: ["wrench"],
+        },
+        {
+            POSITION: [8.5, 9, 0, 129, 180, 0],
+            TYPE: ["wrench"],
+        },
+        {
+            POSITION: [8.5, 9, 0, 180, 180, 0],
+            TYPE: ["wrench"],
+        },
+        {
+            POSITION: [8.5, 9, 0, 231, 180, 0],
+            TYPE: ["wrench"],
+        },
+        {
+            POSITION: [8.5, 9, 0, 282, 180, 0],
+            TYPE: ["wrench"],
+        },
+        {
+            POSITION: [8.5, 9, 0, 333, 180, 0],
+            TYPE: ["wrench"],
+        },
+    ],
+};
+exports.rheaUpperBody = {
+    LABEL: "",
+    CONTROLLERS: [["spin", { independent: true, speed: 0.005 }]],
+    COLOR: 17,
+    BODY: {
+        FOV: base.FOV * 2,
+	},
+    SIZE: 100,
+    SKILL: [9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    MAX_CHILDREN: 28,
+    SHAPE: 5,
+    INDEPENDENT: true,
+    TURRETS: [
+        {
+            //**     SIZE         X             Y         ANGLE        ARC
+            POSITION: [10.6, 7.5, 0, 35, 160, 0],
+            TYPE: ["crowbar"],
+        },
+        {
+            POSITION: [10.6, 7.5, 0, 110, 160, 0],
+            TYPE: ["crowbar"],
+        },
+        {
+            POSITION: [10.6, 7.5, 0, 180, 160, 0],
+            TYPE: ["crowbar"],
+        },
+        {
+            POSITION: [10.6, 7.5, 0, 252, 160, 0],
+            TYPE: ["crowbar"],
+        },
+        {
+            POSITION: [10.6, 7.5, 0, 325, 160, 0],
+            TYPE: ["crowbar"],
+        },
+    ],
+};
+exports.rhea = {
+    PARENT: ["celestial"],
+    NAME: "Rhea",
+    COLOR: 17,
+    TURRETS: [
+        {
+            /*********    SIZE         X             Y         ANGLE        ARC */
+            POSITION: [6.5, 9, 0, 260, 180, 0],
+            TYPE: ["baseTrapTurret", { INDEPENDENT: true }],
+        },
+        {
+            POSITION: [6.5, 9, 0, 219, 180, 0],
+            TYPE: ["baseTrapTurret", { INDEPENDENT: true }],
+        },
+        {
+            POSITION: [6.5, 9, 0, 180, 180, 0],
+            TYPE: ["baseTrapTurret", { INDEPENDENT: true }],
+        },
+        {
+            POSITION: [6.5, 9, 0, 300, 180, 0],
+            TYPE: ["baseTrapTurret", { INDEPENDENT: true }],
+        },
+        {
+            POSITION: [6.5, 9, 0, 339, 180, 0],
+            TYPE: ["baseTrapTurret", { INDEPENDENT: true }],
+        },
+        {
+            POSITION: [6.5, 9, 0, 380, 180, 0],
+            TYPE: ["baseTrapTurret", { INDEPENDENT: true }],
+        },
+        {
+            POSITION: [6.5, 9, 0, 420, 180, 0],
+            TYPE: ["baseTrapTurret", { INDEPENDENT: true }],
+        },
+        {
+            POSITION: [6.5, 9, 0, 459, 180, 0],
+            TYPE: ["baseTrapTurret", { INDEPENDENT: true }],
+        },
+        {
+            POSITION: [6.5, 9, 0, 500, 180, 0],
+            TYPE: ["baseTrapTurret", { INDEPENDENT: true }],
+        },
+        {
+            POSITION: [14.77, 0, 0, 0, 360, 1],
+            TYPE: ["rheaLowerBody"],
+        },
+        {
+            POSITION: [8.7, 0, 0, 0, 360, 1],
+            TYPE: ["rheaUpperBody"],
+        },
+    ],
+};
+
+exports.solarchip = {
+    PARENT: ["drone"],
+    SHAPE: 4,
+    HITS_OWN_TYPE: "hard",
+    BODY: {
+        FOV: .2,
+    },
+	
+    TURRETS: [{
+        POSITION: [20 * Math.SQRT1_2, 0, 0, 45, 0, 1],
+        TYPE: ["square", { TURRET_FACES_CLIENT: true }]
+    }]
+};
+exports.thaumaturge  = {
+    PARENT: ["miniboss"],
+    LABEL: "Thaumaturge ",
+    DANGER: 9,
+    SHAPE: 4,
+    COLOR: 13,
+    SIZE: 26,
+    MAX_CHILDREN: 25,
+    FACING_TYPE: "autospin",
+    VALUE: 3e5,
+    BODY: {
+        FOV: 1,
+        SPEED: 0.2 * base.SPEED,
+        HEALTH: 10 * base.HEALTH,
+        DAMAGE: 2.6 * base.DAMAGE,
+    },
+    GUNS: [
+	{
+        POSITION: [3.5, 13.65, 1.2, 8, 0, 90, 0],
+        PROPERTIES: {
+            SHOOT_SETTINGS: combineStats([g.drone, g.summoner, { size: 0.7 }]),
+            TYPE: ["solarchip"],
+            AUTOFIRE: true,
+            SYNCS_SKILLS: true,
+            STAT_CALCULATOR: gunCalcNames.necro,
+            WAIT_TO_CYCLE: true,
+        },
+	},
+	{
+        POSITION: [3.5, 13.65, 1.2, 8, 0, 0, 0],
+        PROPERTIES: {
+            SHOOT_SETTINGS: combineStats([g.drone, g.summoner, { size: 0.7 }]),
+            TYPE: ["solarchip"],
+            AUTOFIRE: true,
+            SYNCS_SKILLS: true,
+            STAT_CALCULATOR: gunCalcNames.necro,
+            WAIT_TO_CYCLE: true,
+        },
+	},
+	{
+        POSITION: [3.5, 13.65, 1.2, 8, 0, 180, 0],
+        PROPERTIES: {
+            SHOOT_SETTINGS: combineStats([g.drone, g.summoner, { size: 0.7 }]),
+            TYPE: ["solarchip"],
+            AUTOFIRE: true,
+            SYNCS_SKILLS: true,
+            STAT_CALCULATOR: gunCalcNames.necro,
+            WAIT_TO_CYCLE: true,
+        },
+	},
+	{
+        POSITION: [3.5, 13.65, 1.2, 8, 0, 270, 0],
+        PROPERTIES: {
+            SHOOT_SETTINGS: combineStats([g.drone, g.summoner, { size: 0.7 }]),
+            TYPE: ["solarchip"],
+            AUTOFIRE: true,
+            SYNCS_SKILLS: true,
+            STAT_CALCULATOR: gunCalcNames.necro,
+            WAIT_TO_CYCLE: true,
+        },
+	},
+      {
+            POSITION: [4.25, 10, 1, 8, 0, 270, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.drone, g.pound]),
+                TYPE: "bullet",
+                AUTOFIRE: true,
+            },
+            },
+      {
+            POSITION: [4.25, 10, 1, 8, 0, 0, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.drone, g.pound]),
+                TYPE: "bullet",
+                AUTOFIRE: true,
+            },
+            },
+      {
+            POSITION: [4.25, 10, 1, 8, 0, 180, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.drone, g.pound]),
+                TYPE: "bullet",
+                AUTOFIRE: true,
+            },
+            },
+      {
+            POSITION: [4.25, 10, 1, 8, 0, 90, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.drone, g.pound]),
+                TYPE: "bullet",
+                AUTOFIRE: true,
+            },
+            },
+    ],
+};

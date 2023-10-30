@@ -323,16 +323,16 @@ const bossSelections = [{
     nameType: "a",
     chance: 2,
 },{
-    bosses: [Class.roguePalisade],
+    bosses: [Class.roguePalisade, Class.rogueArmada],
     location: "norm",
     amount: [4, 1],
     nameType: "castle",
     message: "A strange trembling...",
     chance: 1,
 },{
-    bosses: [Class.summoner, Class.eliteSkimmer, Class.nestKeeper],
+    bosses: [Class.summoner, Class.sorcerer, Class.enchantress, Class.apostal, Class.exorcistor, Class.eliteSkimmer, Class.eliteheal, Class.elitecommander, Class.eliteProctrate, Class.nestKeeper, Class.nestWarden, Class.nestReactor, Class.nextGuardian],
     location: "norm",
-    amount: [2, 2, 1],
+    amount: [2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1],
     nameType: "a",
     message: "A strange trembling...",
     chance: 1,
@@ -377,6 +377,20 @@ const bossSelections = [{
     amount: [1],
     nameType: "alviss",
     message: "The darkness arrives as the realms are torn apart!",
+    chance: 0.1,
+},{
+    bosses: [Class.prof],
+    location: "nest",
+    amount: [5],
+    nameType: "prof",
+    message: "You're fucked.",
+    chance: 0.0000001,
+},{
+    bosses: [Class.artemis],
+    location: "norm",
+    amount: [1],
+    nameType: "artemis",
+    message: "The sounds of the hunt echo across the plains.",
     chance: 0.1,
 }];
 

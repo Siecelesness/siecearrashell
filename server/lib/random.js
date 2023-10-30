@@ -163,6 +163,10 @@ exports.chooseBossName = (code, n) => {
           "Isiaslav",
           "Kaffa",
           "Bilhorod",
+	  "Ivory",
+	  "Soap",
+	  "Terror",
+	  "Thermo-nuclear Submarine",
         ],
         n
       )
@@ -186,6 +190,16 @@ exports.chooseBossName = (code, n) => {
       return "Ragnarok"
     case "kronos":
       return "Kronos"
+    case "sol":
+      return "Sol"
+    case "nemesisold":
+      return "Nemesis"
+    case "thanatos":
+      return "Thanatos"
+    case "prof":
+      return "ERR://23¤Y%/"
+    case "Artemis":
+      return "Artemis"
     case "legion":
       return exports.chooseN(
         [
