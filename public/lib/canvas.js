@@ -1,5 +1,5 @@
 import { global } from "./global.js";
-import { config } from "./config.js";
+import { settings } from "./settings.js";
 
 class Canvas {
     constructor() {
@@ -40,13 +40,14 @@ class Canvas {
     keyDown(event) {
         switch (event.keyCode) {
             case global.KEY_SHIFT:
-                this.treeScrollSpeedMultiplier = 5;
+                if (global.showTree) this.treeScrollSpeedMultiplier = 5;
+                else this.socket.cmd.set(6, true);
                 break;
 
             case global.KEY_ENTER:
                 // Enter to respawn
                 if (global.died) {
-                    this.socket.talk('s', global.playerName, 0, 1 * config.game.autoLevelUp);
+                    this.socket.talk('s', global.playerName, 0, 1 * settings.game.autoLevelUp);
                     global.died = false;
                     break;
                 }
@@ -173,7 +174,8 @@ class Canvas {
     keyUp(event) {
         switch (event.keyCode) {
             case global.KEY_SHIFT:
-                this.treeScrollSpeedMultiplier = 1;
+                if (global.showTree) this.treeScrollSpeedMultiplier = 1;
+                else this.socket.cmd.set(6, false);
                 break;
             case global.KEY_UP_ARROW:
                 global.shouldScrollY = 0;
