@@ -28,9 +28,148 @@ module.exports = {
     // NOTE: These prefixes are only for categorisation, a room file would work the same regardless of its prefix. APS++ does nothing based on file name prefixes.
     ROOM_SETUP: ['map_apspp_default'],
 
+<<<<<<< Updated upstream
     // The dimensions of a single tile on the map.
     TILE_WIDTH: 400,
     TILE_HEIGHT: 400,
+=======
+    // Room
+    
+    // Room width in grid units
+    WIDTH: 6500,
+    
+    // Room height in grid units
+    HEIGHT: 6500,
+    
+    // Shape of the arena.
+    // Can be "rect" or "circle".
+    ARENA_TYPE: "rect",
+
+    // The tiles that the room consist of.
+    ROOM_SETUP: [
+        [ "norm", "norm", "norm", "norm", "norm", "norm", "roid", "roid", "roid", "norm", "norm", "norm", "norm", "norm", "norm" ],
+        [ "norm", "norm", "norm", "norm", "norm", "norm", "norm", "roid", "norm", "norm", "norm", "norm", "norm", "norm", "norm" ],
+        [ "norm", "norm", "rock", "rock", "norm", "norm", "norm", "norm", "norm", "norm", "norm", "rock", "rock", "norm", "norm" ],
+        [ "norm", "norm", "rock", "rock", "norm", "norm", "norm", "norm", "norm", "norm", "norm", "rock", "rock", "norm", "norm" ],
+        [ "norm", "norm", "norm", "norm", "norm", "norm", "norm", "norm", "norm", "norm", "norm", "norm", "norm", "norm", "norm" ],
+        [ "norm", "norm", "norm", "norm", "norm", "nest", "nest", "nest", "nest", "nest", "norm", "norm", "norm", "norm", "norm" ],
+        [ "roid", "norm", "norm", "norm", "norm", "nest", "nest", "nest", "nest", "nest", "norm", "norm", "norm", "norm", "roid" ],
+        [ "roid", "roid", "norm", "norm", "norm", "nest", "nest", "nest", "nest", "nest", "norm", "norm", "norm", "roid", "roid" ],
+        [ "roid", "norm", "norm", "norm", "norm", "nest", "nest", "nest", "nest", "nest", "norm", "norm", "norm", "norm", "roid" ],
+        [ "norm", "norm", "norm", "norm", "norm", "nest", "nest", "nest", "nest", "nest", "norm", "norm", "norm", "norm", "norm" ],
+        [ "norm", "norm", "norm", "norm", "norm", "norm", "norm", "norm", "norm", "norm", "norm", "norm", "norm", "norm", "norm" ],
+        [ "norm", "norm", "rock", "rock", "norm", "norm", "norm", "norm", "norm", "norm", "norm", "rock", "rock", "norm", "norm" ],
+        [ "norm", "norm", "rock", "rock", "norm", "norm", "norm", "norm", "norm", "norm", "norm", "rock", "rock", "norm", "norm" ],
+        [ "norm", "norm", "norm", "norm", "norm", "norm", "norm", "roid", "norm", "norm", "norm", "norm", "norm", "norm", "norm" ],
+        [ "norm", "norm", "norm", "norm", "norm", "norm", "roid", "roid", "roid", "norm", "norm", "norm", "norm", "norm", "norm" ]
+    ],
+
+    // Tile count in a row
+    X_GRID: 15,
+
+    // Tile count in a column
+    Y_GRID: 15,
+
+
+
+    // Physics
+
+    // General multiplier for acceleration and max speeds.
+    runSpeed: 1.5,
+
+    // General damage multiplier everytime damage is dealt.
+    DAMAGE_CONSTANT: 0.5,
+
+    // General knockback multiplier everytime knockback is applied.
+    KNOCKBACK_CONSTANT: 1.5,
+
+    // TODO: Figure out how the math behind this works.
+    GLASS_HEALTH_FACTOR: 2,
+
+    // How strong the force is that confines entities to the map and portals apply to entities.
+    ROOM_BOUND_FORCE: 0.01,
+
+    // What does this do?
+    SKILL_BOOST: 5,
+
+    // TODO: Find out what the intention behind the implementation of this configuration is.
+    SOFT_MAX_SKILL: 0.59,
+
+
+
+    // Gameplay
+
+    // When an entity reaches a level, this function is called and returns how many points that entity gets for reaching that level.
+    LEVEL_SKILL_POINT_FUNCTION: level => {
+        if (level < 2) return 0;
+        if (level <= 40) return 1;
+        if (level <= 45 && level & 1 == 1) return 1;
+        return 0;
+    },
+
+    // Default skill caps.
+    MAX_SKILL: 9,
+
+    // Amount of tank tiers.
+    MAX_UPGRADE_TIER: 9,
+
+    // Level difference between each tier.
+    TIER_MULTIPLIER: 15,
+
+    // Max normally achievable level.
+    LEVEL_CAP: 45,
+
+    // TODO: Figure out what this does.
+    LEVEL_SOFT_CAP: 0,
+
+    // Max level you get by level-up key and auto-level-up.
+    LEVEL_CHEAT_CAP: 45,
+
+    // Amount of player-bots to spawn.
+    BOTS: 0,
+
+    // How much XP player-bots get per second until they reach LEVEL_CAP.
+    BOT_XP: 27000,
+
+    // The class that players and player-bots spawn as.
+    SPAWN_CLASS: "basic",
+
+
+
+    // Natural Spawns
+
+    // Something about the likeliness of shinies, idk.
+    SHINY_SCALE: 0,
+
+    // How much food to spawn. Not an exact amount.
+    FOOD_AMOUNT: 100,
+
+    // How much nest food to spawn.
+    // Dependant on the food limit calculated with FOOD_AMOUNT.
+    // Not exact multiplier either.
+    FOOD_AMOUNT_NEST: 1.5,
+
+    // Number of crashers per nest tile.
+    CRASHER_RATIO: 2,
+
+
+
+    // Gamemode related.
+    // Please change gamemode in 'server\modules\setup\config.js' instead.
+    SPECIAL_BOSS_SPAWNS: false,
+    MOTHERSHIP_LOOP: false,
+    DOMINATOR_LOOP: false,
+    RANDOM_COLORS: false,
+    SPACE_PHYSICS: false,
+    SPACE_MODE: false,
+    GROUPS: false,
+    TRAIN: false,
+    MAZE: false,
+    HUNT: false,
+    TAG: false,
+    TEAMS: 4,
+    MODE: "ffa",
+>>>>>>> Stashed changes
 
 
 

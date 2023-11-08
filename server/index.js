@@ -265,12 +265,165 @@ const gameloop = () => {
 
 setTimeout(closeArena, 60000 * 120); // Restart every 2 hours
 
+<<<<<<< Updated upstream
 let bossTimer = 0,
 spawnBosses = minibossCount => {
     if (!minibossCount && bossTimer++ > c.BOSS_SPAWN_COOLDOWN) {
         bossTimer = -c.BOSS_SPAWN_DURATION;
         let selection = c.BOSS_TYPES[ran.chooseChance(...c.BOSS_TYPES.map((selection) => selection.chance))],
             amount = ran.chooseChance(...selection.amount) + 1;
+=======
+function placeRoids() {
+    function placeRoid(type, entityClass) {
+        let x = 0;
+        let position;
+        do {
+            position = room.randomType(type);
+            x++;
+            if (x > 200) {
+                util.warn("Could not place some roids.");
+                return 0;
+            }
+        } while (dirtyCheck(position, 10 + entityClass.SIZE));
+        let o = new Entity(position);
+        o.define(entityClass);
+        o.team = TEAM_ROOM;
+        o.facing = ran.randomAngle();
+        o.protect();
+        o.life();
+    }
+    // Start placing them
+    let factor = (room.width * room.height) / (room.xgrid * room.ygrid * 375000);
+    let roidcount = room.roid.length * factor;
+    let rockcount = room.rock.length * factor * 5;
+    let count = 0;
+    for (let i = Math.ceil(roidcount); i; i--) {
+        count++;
+        placeRoid("roid", Class.rock);
+    }
+    for (let i = Math.ceil(roidcount * 0.3); i; i--) {
+        count++;
+        placeRoid("roid", Class.gravel);
+    }
+    for (let i = Math.ceil(rockcount * 0.8); i; i--) {
+        count++;
+        placeRoid("rock", Class.rock);
+    }
+    for (let i = Math.ceil(rockcount * 0.5); i; i--) {
+        count++;
+        placeRoid("rock", Class.gravel);
+    }
+    util.log("Placing " + count + " obstacles!");
+}
+
+function spawnWall(loc) {
+    let o = new Entity(loc);
+    o.define(Class.wall);
+    o.team = TEAM_ROOM;
+    o.SIZE = room.width / room.xgrid / 2;
+    o.protect();
+    o.life();
+}
+
+let timer = Math.round((c.bossSpawnInterval || 8) * 60); // It's in minutes
+const bossSelections = [{
+    bosses: [Class.eliteDestroyer, Class.eliteGunner, Class.eliteSprayer, Class.eliteBattleship, Class.eliteSpawner],
+    location: "nest",
+    amount: [5, 5, 4, 2, 1],
+    nameType: "a",
+    chance: 2,
+},{
+    bosses: [Class.roguePalisade, Class.rogueArmada],
+    location: "norm",
+    amount: [4, 1],
+    nameType: "castle",
+    message: "A strange trembling...",
+    chance: 1,
+},{
+    bosses: [Class.summoner, Class.sorcerer, Class.enchantress, Class.apostal, Class.exorcistor, Class.eliteSkimmer, Class.eliteheal, Class.elitecommander, Class.eliteProctrate, Class.nestKeeper, Class.nestWarden, Class.nestReactor, Class.nextGuardian],
+    location: "norm",
+    amount: [2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1],
+    nameType: "a",
+    message: "A strange trembling...",
+    chance: 1,
+},{
+    bosses: [Class.paladin],
+    location: "norm",
+    amount: [1],
+    nameType: "paladin",
+    message: "The world tremors as the celestials are reborn anew!",
+    chance: 0.1,
+},{
+    bosses: [Class.freyja],
+    location: "norm",
+    amount: [1],
+    nameType: "freyja",
+    message: "The world tremors as the celestials are reborn anew!",
+    chance: 0.1,
+},{
+    bosses: [Class.zaphkiel],
+    location: "norm",
+    amount: [1],
+    nameType: "zaphkiel",
+    message: "The world tremors as the celestials are reborn anew!",
+    chance: 0.1,
+},{
+    bosses: [Class.nyx],
+    location: "norm",
+    amount: [1],
+    nameType: "nyx",
+    message: "The world tremors as the celestials are reborn anew!",
+    chance: 0.1,
+},{
+    bosses: [Class.theia],
+    location: "norm",
+    amount: [1],
+    nameType: "theia",
+    message: "The world tremors as the celestials are reborn anew!",
+    chance: 0.1,
+},{
+    bosses: [Class.alviss],
+    location: "norm",
+    amount: [1],
+    nameType: "alviss",
+    message: "The darkness arrives as the realms are torn apart!",
+    chance: 0.1,
+},{
+    bosses: [Class.prof],
+    location: "nest",
+    amount: [1],
+    nameType: "prof",
+    message: "You're fucked.",
+    chance: 0.0000001,
+},{
+    bosses: [Class.artemis],
+    location: "norm",
+    amount: [1],
+    nameType: "artemis",
+    message: "The sounds of the hunt echo across the plains.",
+    chance: 0.1,
+},{
+    bosses: [Class.somnus, Class.angus, Class.tranqi, Class.felix],
+    location: "norm",
+    amount: [1],
+    nameType: "a",
+    message: "A rift in reality tears as the sounds of cosmic tentacles linger...",
+    chance: 1,
+},{
+    bosses: [Class.squaregunman],
+    location: "norm",
+    amount: [1],
+    nameType: "a",
+    message: "A rift in reality tears as power slashes through the air, guns smoking...",
+    chance: 1,
+}];
+
+let spawnBosses = minibossCount => {
+    if (!minibossCount && !timer--) {
+        timer--;
+        const selection = bossSelections[ran.chooseChance(...bossSelections.map((selection) => selection.chance))];
+        const amount = ran.chooseChance(...selection.amount) + 1;
+>>>>>>> Stashed changes
         sockets.broadcast(amount > 1 ? "Visitors are coming..." : "A visitor is coming...");
         if (selection.message) {
             sockets.broadcast(selection.message);

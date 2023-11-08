@@ -80,6 +80,7 @@ exports.chooseBotName = () => {
     return exports.choose([ "Alice", "Bob", "Carmen", "David", "Edith", "Freddy", "Gustav", "Helga", "Janet", "Lorenzo", "Mary", "Nora", "Olivia", "Peter", "Queen", "Roger", "Suzanne", "Tommy", "Ursula", "Vincent", "Wilhelm", "Xerxes", "Yvonne", "Zachary", "Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Hotel", "India", "Juliet", "Kilo", "Lima", "Mike", "November", "Oscar", "Papa", "Quebec", "Romeo", "Sierra", "Tango", "Uniform", "Victor", "Whiskey", "X-Ray", "Yankee", "Zulu" ])
 }
 
+<<<<<<< Updated upstream
 exports.chooseBossName = code => {
     switch (code) {
         case "a":
@@ -89,4 +90,140 @@ exports.chooseBossName = code => {
         case "legion":
             return exports.choose([ "Vesta", "Juno", "Orcus", "Janus", "Minerva", "Ceres" ]);
     }
+=======
+exports.chooseBossName = (code, n) => {
+  switch (code) {
+    case "a":
+      return exports.chooseN(
+        [
+          "Archimedes",
+          "Akilina",
+          "Anastasios",
+          "Athena",
+          "Alkaios",
+          "Amyntas",
+          "Aniketos",
+          "Anaxagoras",
+          "Apollon",
+	  "Aphrodite",
+	  "Dionysus",
+	  "Mithrix",
+	  "Providence",
+	  "Noxus",
+	  "Universe",
+	  "Xeroc",
+	  "Goozma",
+	  "Silva",
+	  "Gabriel",
+	  "Minos",
+	  "Sisyphus",
+	  "Karl",
+	  "Ruin",
+	  "Greed",
+	  "Wrath",
+	  "Envy",
+	  "Lust",
+	  "Gluttony",
+	  "Kaliber",
+	  "Flaysn",
+	  "Rae",
+	  "Siecelesness",
+	  "Radiance",
+	  "Grimm",
+	  "Pebbles",
+	  "Dylan",
+	  "Miku",
+	  "Nir",
+	  "Ralthama",
+	  "Zerus",
+	  "Antara",
+	  "Solia",
+	  "Anrov",
+	  "Deorum",
+	  "Astrion",
+	  "Solane",
+	  "Lux",
+	  "Impurity",
+	  "Gradion",
+	  "Aprematus",
+	  "Thrsu",
+	  "Kalimu",
+	  "Pryrmido",
+	  "Bohemeus",
+        ],
+        n
+      )
+    case "castle":
+      return exports.chooseN(
+        [
+          "Berezhany",
+          "Lutsk",
+          "Dobromyl",
+          "Akkerman",
+          "Palanok",
+          "Zolochiv",
+          "Palanok",
+          "Mangup",
+          "Olseko",
+          "Brody",
+          "Isiaslav",
+          "Kaffa",
+          "Bilhorod",
+	  "Ivory",
+	  "Soap",
+	  "Terror",
+	  "Blaxx",
+        ],
+        n
+      )
+    case "zaphkiel":
+      return "Zaphkiel"
+    case "paladin":
+      return "Paladin"
+    case "theia":
+      return "Theia"
+    case "freyja":
+      return "Freyja"
+    case "nyx":
+      return "Nyx"
+    case "alviss":
+      return "Alviss"
+    case "tyr":
+      return "Tyr"
+    case "fiolnir":
+      return "Fiolnir"
+    case "ragnarok":
+      return "Ragnarok"
+    case "kronos":
+      return "Kronos"
+    case "sol":
+      return "Sol"
+    case "nemesisold":
+      return "Nemesis"
+    case "thanatos":
+      return "Thanatos"
+    case "prof":
+      return "ERR://23¤Y%/"
+    case "tranqi":
+      return "Tranqi"
+    case "somnus":
+      return "Somnus"
+    case "angus":
+      return "Angus"
+    case "Artemis":
+      return "Artemis"
+    case "legion":
+      return "Legionary Crasher"
+    case "pumpkin":
+      return "Jack Skeleton"
+    case "santa":
+      return "Santa"
+    case "krampus":
+      return "Krampus"
+    case "vesta":
+      return "Vesta"
+    default:
+      return "missingno"
+  }
+>>>>>>> Stashed changes
 }
